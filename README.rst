@@ -1,7 +1,5 @@
-This is a PoC that will attempt to use the original SELKS distro from Stamus Networks and convert it into a honeypot router (HPR). The code in this repo should not be used in a production environment in its current state.
-
 =====
-SELKS
+SELKS-HPR (Honeypot Router)
 =====
 
 Intro

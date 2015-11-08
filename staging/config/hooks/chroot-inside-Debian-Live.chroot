@@ -6,8 +6,6 @@
 #
 # Please run on Debian Jessie
 
-
-
 set -e
 
 # Setting up the LIVE root (during install on disk it is preseeded)
@@ -115,11 +113,6 @@ echo "0 3 * * * root /usr/local/bin/curator delete indices --older-than 16 --tim
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
-echo "SELKS" > /etc/hostname
-
-# Enable the ssh banners
-sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
-
 ### START elasticsearch configuration ###
 
 echo "
@@ -198,9 +191,36 @@ sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applicat
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
 
+#
+#   Bifrozt interfaces configuration
+#
+echo "# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# Bring up them iptables
+pre-up iptables-restore < /etc/network/ipv4hater
+pre-up ip6tables-restore < /etc/network/ipv6hater
+
+# External interface
+auto eth0
+iface eth0 inet dhcp
+
+# Internal interface
+auto eth1
+iface eth1 inet static
+    address 10.19.0.1
+    netmask 255.255.0.0
+    network 10.19.0.0
+    broadcast 10.19.255.255
+
+# Using google dns
+dns-nameservers 8.8.8.8
+" > /etc/network/interfaces
+
 # Clean devel and some others packages
-apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
-	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
+apt-get -y remove bison autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
+	libnetfilter-queue-dev libnss3-dev libnspr4-dev libyaml-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
 	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
 	icedtea-7-jre-jamvm rpm alien sane-utils libsane rpm2cpio \

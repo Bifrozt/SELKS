@@ -216,8 +216,6 @@ else
   # "WARNING: The following packages cannot be authenticated!"
   # note - the naming convention is important
   wget -O config/archives/packages-stamus-networks-gpg.key.chroot  http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key
-  
-  
 fi
 
 # Create dirs if not existing for the custom config files
@@ -311,10 +309,10 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
-rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
-python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl jq python-pip debian-installer-launcher 
-live-build isc-dhcp-server git python-geoip python-mysqldb python-twisted wget" \
+rsync mc python-daemon libnss3-tools curl python-crypto libgmp10 libyaml-0-2 
+python-simplejson python-pygments python-yaml ssh sudo tcpdump nginx openssl jq 
+python-pip debian-installer-launcher live-build isc-dhcp-server python-geoip 
+python-mysqldb python-twisted" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
 # Add system tools packages to be installed
@@ -324,18 +322,18 @@ tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
-if [[ -z "$GUI" ]]; then 
-  echo "
-  lxde fonts-lyx wireshark terminator conky" \
-  >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
-  # Copy conky conf file
-  cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
-  # Copy the menu shortcuts for Kibana and Scirius
-  # this is for the lxde menu widgets - not the desktop shortcuts
-  cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
-fi
+#if [[ -z "$GUI" ]]; then 
+#  echo "
+#  lxde fonts-lyx wireshark terminator conky" \
+#  >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+#  # Copy conky conf file
+#  cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
+#  # Copy the menu shortcuts for Kibana and Scirius
+#  # this is for the lxde menu widgets - not the desktop shortcuts
+#  cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
+#  cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
+#  
+#fi
 
 # If -p (add packages) option is used - add those packages to the build
 if [[ -n "${PKG_ADD}" ]]; then 
@@ -366,18 +364,11 @@ else
 fi
 
 # Debian installer preseed.cfg
-echo "
-d-i netcfg/hostname string SELKS
-
-d-i passwd/user-fullname string selks-user User
-d-i passwd/username string selks-user
-d-i passwd/user-password password selks-user
-d-i passwd/user-password-again password selks-user
-d-i passwd/user-default-groups string audio cdrom floppy video dip plugdev scanner bluetooth netdev sudo
-
-d-i passwd/root-password password StamusNetworks
-d-i passwd/root-password-again password StamusNetworks
-" > Stamus-Live-Build/config/includes.installer/preseed.cfg
+#
+# Removing all hard coded passwords and usernames
+# Adding Bifrozt network configuration 
+#
+echo "" > Stamus-Live-Build/config/includes.installer/preseed.cfg
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
