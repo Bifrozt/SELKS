@@ -239,6 +239,11 @@ mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
+#
+# Bifrozt dirs
+#
+mkdir -p config/includes.chroot/etc/network/
+mkdir -p config/includes.chroot/etc/dhcp/
 
 cd ../
 
@@ -287,6 +292,16 @@ cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/in
 # Copy stamus debian repo list file - 
 # holding latest Suricata,libhtp,Scirius and kernel packages
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+#
+# Bifrozt configs
+#
+cp staging/etc/sysctl.conf Stamus-Live-Build/config/includes.chroot/etc/
+cp staging/etc/network/interfaces Stamus-Live-Build/config/includes.chroot/etc/network
+cp staging/etc/network/ipv4hater Stamus-Live-Build/config/includes.chroot/etc/network
+cp staging/etc/network/ipv6hater Stamus-Live-Build/config/includes.chroot/etc/network
+cp staging/etc/dhcp/dhcpd.conf Stamus-Live-Build/config/includes.chroot/etc/dhcp
+cp staging/etc/dhcp/dhcpd.conf Stamus-Live-Build/config/includes.chroot/etc/dhcp
+cp staging/etc/default/isc-dhcp-server Stamus-Live-Build/config/includes.chroot/etc/default
 
 # Add core system packages to be installed
 echo "
@@ -298,8 +313,8 @@ libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
 rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
 python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl jq  
-python-pip debian-installer-launcher live-build " \
+python-yaml ssh sudo tcpdump nginx openssl jq python-pip debian-installer-launcher 
+live-build isc-dhcp-server git python-geoip python-mysqldb python-twisted wget" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
 # Add system tools packages to be installed
